@@ -11,7 +11,7 @@ final class HeroDetailViewModel {
     
     // MARK: - Properties
     
-    var hero: Hero?
+    var hero: Hero
     var location: Location?
     var episodes: [EpisodeViewModel] = []
     @Published var isLoading = false
@@ -40,11 +40,9 @@ final class HeroDetailViewModel {
             }
             
             self.queue.async {
-                if let location = self.hero?.location {
-                    self.location(by: location)
-                }
+                self.location(by: self.hero.location)
                 
-                self.hero?.episode?.forEach({ self.episode(by: $0) })
+                self.hero.episode.forEach({ self.episode(by: $0) })
                 
                 self.group.notify(queue: DispatchQueue.main) {
                     self.isLoading = false
@@ -72,7 +70,7 @@ final class HeroDetailViewModel {
     }
     
     private func location(by location: Location) {
-        guard let stringUrl = location.url, let url = URL(string: stringUrl) else {
+        guard let url = URL(string: location.url) else {
             return
         }
         group.enter()

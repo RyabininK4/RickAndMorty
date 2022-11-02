@@ -38,6 +38,7 @@
 		297EC332290963FD00357010 /* UITableViewCell+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297EC331290963FD00357010 /* UITableViewCell+Extensions.swift */; };
 		297EC334290984BA00357010 /* EpisodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297EC333290984BA00357010 /* EpisodeViewModel.swift */; };
 		297EC336290A622000357010 /* ServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297EC335290A622000357010 /* ServiceProvider.swift */; };
+		29C734172912A6810027D925 /* Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C734162912A6810027D925 /* Info.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +75,7 @@
 		297EC331290963FD00357010 /* UITableViewCell+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extensions.swift"; sourceTree = "<group>"; };
 		297EC333290984BA00357010 /* EpisodeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeViewModel.swift; sourceTree = "<group>"; };
 		297EC335290A622000357010 /* ServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProvider.swift; sourceTree = "<group>"; };
+		29C734162912A6810027D925 /* Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Info.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,9 +253,10 @@
 		297CD72D2907176C00811F42 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				291837082907E26C00296D53 /* Episode.swift */,
-				297CD72E2907178300811F42 /* Hero.swift */,
 				297CD73B290720FF00811F42 /* HeroesResponse.swift */,
+				29C734162912A6810027D925 /* Info.swift */,
+				297CD72E2907178300811F42 /* Hero.swift */,
+				291837082907E26C00296D53 /* Episode.swift */,
 				291836FB2907DE7000296D53 /* Location.swift */,
 				297EC32D2909593E00357010 /* APIError.swift */,
 			);
@@ -363,6 +366,7 @@
 				2918370C2907EBAF00296D53 /* HeroDetailsEpisodeTableViewCell.swift in Sources */,
 				297CD7272907147400811F42 /* NetworkError.swift in Sources */,
 				297CD72429070D3800811F42 /* NetworkService.swift in Sources */,
+				29C734172912A6810027D925 /* Info.swift in Sources */,
 				291836F02907D2A900296D53 /* HeroDetailsViewController.swift in Sources */,
 				291836FC2907DE7000296D53 /* Location.swift in Sources */,
 				297CD73629071AA300811F42 /* HeroTableViewCell.swift in Sources */,

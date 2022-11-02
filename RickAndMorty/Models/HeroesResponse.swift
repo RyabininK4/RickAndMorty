@@ -8,5 +8,6 @@
 import Foundation
 
 struct HeroesResponse: Codable {
-    var results: [Hero] = []
+    let info: Info
+    let results: [Hero]
 }

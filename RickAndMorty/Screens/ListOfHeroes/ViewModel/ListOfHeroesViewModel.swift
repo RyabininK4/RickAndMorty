@@ -17,6 +17,7 @@ final class ListOfHeroesViewModel {
     
     // MARK: - Private properties
     
+    private var maxPages = 1
     private var currentPage = 1
     private var networkService: NetworkServiceType
     
@@ -41,7 +42,7 @@ final class ListOfHeroesViewModel {
     }
     
     func loadMoreItemsForList() {
-        if state != .loading {
+        if state != .loading, maxPages > currentPage {
             currentPage += 1
             fetch(by: currentPage)
         }
@@ -53,6 +54,7 @@ final class ListOfHeroesViewModel {
         guard let url = API.makeUrl(with: .pageHeroes(page: page)) else {
             return
         }
+        print("KR+ \(page)")
         state = .loading
         networkService.request(url: url) { [weak self] (result: Result<HeroesResponse, NetworkError>) in
             guard let self = self else {
@@ -67,6 +69,7 @@ final class ListOfHeroesViewModel {
                 } else {
                     self.heroes.append(contentsOf: data.results)
                 }
+                self.maxPages = data.info.pages
                 self.state = .finished
             }
         }

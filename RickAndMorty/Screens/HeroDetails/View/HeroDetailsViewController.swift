@@ -30,15 +30,13 @@ final class HeroDetailsViewController: BaseViewController {
         configureTableView()
         configureObserver()
         fetchData()
-        navigationItem.title = viewModel.hero?.name
+        navigationItem.title = viewModel.hero.name
     }
     
     // MARK: - Network
     
     private func fetchData() {
-        if let id = viewModel.hero?.id {
-            viewModel.fetchData(id: id)
-        }
+        viewModel.fetchData(id: viewModel.hero.id)
     }
     
     // MARK: - Configure
@@ -81,7 +79,7 @@ extension HeroDetailsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return viewModel.hero == nil ? 0 : 1
+            return 1
         case 1:
             return viewModel.location == nil ? 0 : 1
         case 2:
@@ -95,9 +93,7 @@ extension HeroDetailsViewController: UITableViewDataSource {
         switch indexPath.section {
         case 0:
             let cell = HeroDetailsNameTableViewCell.create(for: tableView) as! HeroDetailsNameTableViewCell
-            if let viewModelHero = viewModel.hero {
-                cell.setup(hero: viewModelHero)
-            }
+            cell.setup(hero: viewModel.hero)
             return cell
         case 1:
             let cell = HeroDetailsLocationTableViewCell.create(for: tableView) as! HeroDetailsLocationTableViewCell

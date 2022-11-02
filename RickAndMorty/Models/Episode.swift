@@ -8,7 +8,7 @@
 import Foundation
 
 struct Episode: Codable {
-    var name: String?
-    var episode: String?
-    var url: String?
+    let name: String
+    let episode: String
+    let url: String
 }

@@ -8,13 +8,13 @@
 import Foundation
 
 struct Hero: Codable {
-    var id: Int?
-    var name: String?
-    var status: String?
-    var species: String?
-    var type: String?
-    var gender: String?
-    var location: Location?
-    var image: String?
-    var episode: [String]?
+    let id: Int
+    let name: String
+    let status: String
+    let species: String
+    let type: String
+    let gender: String
+    let location: Location
+    let image: String
+    let episode: [String]
 }

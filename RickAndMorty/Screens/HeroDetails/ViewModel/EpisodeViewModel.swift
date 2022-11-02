@@ -30,9 +30,6 @@ final class EpisodeViewModel {
     }
     
     var url: URL? {
-        guard let episodeUrl = episode.url else {
-            return nil
-        }
-        return URL(string: episodeUrl)
+        return URL(string: episode.url)
     }
 }
