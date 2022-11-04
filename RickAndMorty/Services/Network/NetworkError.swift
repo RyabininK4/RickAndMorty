@@ -11,6 +11,7 @@ enum NetworkError: Error, Equatable {
     case emptyData
     case apiError(message: String)
     case decodeError
+    case urlError
     
     var message: String {
         switch self {
@@ -20,6 +21,8 @@ enum NetworkError: Error, Equatable {
             return "Server response is missing required data"
         case .apiError(let message):
             return message
+        case .urlError:
+            return "URL address is invalid"
         }
     }
 }

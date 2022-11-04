@@ -7,19 +7,14 @@
 
 import Foundation
 
-enum ViewModelState: Equatable {
-    case loading
-    case finished
-    case error(NetworkError)
-}
-
 final class ListOfHeroesViewModel {
     
     // MARK: - Private properties
-    
-    private var maxPages = 1
-    private var currentPage = 1
+    private let maxPagesDownload = 3
+    private var maxPage = 1
+    private var lastDownloadPage = 1
     private var networkService: NetworkServiceType
+    private var group = DispatchGroup()
     
     // MARK: - Properties
     
@@ -37,24 +32,37 @@ final class ListOfHeroesViewModel {
     // MARK: - Download data methods
     
     func fetchData() {
-        currentPage = 1
-        fetch(by: currentPage)
+        fetchFirstPage()
     }
     
-    func loadMoreItemsForList() {
-        if state != .loading, maxPages > currentPage {
-            currentPage += 1
-            fetch(by: currentPage)
+    private func loadMoreItemsForList() {
+        group = DispatchGroup()
+        
+        for _ in 0..<maxPagesDownload {
+            lastDownloadPage += 1
+            if lastDownloadPage < maxPage {
+                fetch(by: lastDownloadPage)
+            } else {
+                break
+            }
+        }
+        
+        group.notify(queue: DispatchQueue.main) { [weak self] in
+            guard let self = self else {
+                return
+            }
+            if self.lastDownloadPage < self.maxPage {
+                self.loadMoreItemsForList()
+            }
         }
     }
     
     // MARK: - Network
     
-    private func fetch(by page: Int) {
-        guard let url = API.makeUrl(with: .pageHeroes(page: page)) else {
+    private func fetchFirstPage() {
+        guard let url = API.makeUrl(with: .firstPageHeroes) else {
             return
         }
-        print("KR+ \(page)")
         state = .loading
         networkService.request(url: url) { [weak self] (result: Result<HeroesResponse, NetworkError>) in
             guard let self = self else {
@@ -64,14 +72,30 @@ final class ListOfHeroesViewModel {
             case .failure(let error):
                 self.state = .error(error)
             case .success(let data):
-                if page == 1 {
-                    self.heroes = data.results
-                } else {
-                    self.heroes.append(contentsOf: data.results)
-                }
-                self.maxPages = data.info.pages
+                self.heroes = data.results
+                self.maxPage = data.info.pages
                 self.state = .finished
+                self.loadMoreItemsForList()
             }
+        }
+    }
+    
+    private func fetch(by page: Int) {
+        guard let url = API.makeUrl(with: .heroes(page: page)) else {
+            return
+        }
+        group.enter()
+        networkService.request(url: url) { [weak self] (result: Result<HeroesResponse, NetworkError>) in
+            guard let self = self else {
+                return
+            }
+            switch result {
+            case .failure(_):
+                break
+            case .success(let data):
+                self.heroes.append(contentsOf: data.results)
+            }
+            self.group.leave()
         }
     }
 }

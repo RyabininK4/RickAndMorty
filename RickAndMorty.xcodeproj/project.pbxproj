@@ -39,6 +39,8 @@
 		297EC334290984BA00357010 /* EpisodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297EC333290984BA00357010 /* EpisodeViewModel.swift */; };
 		297EC336290A622000357010 /* ServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297EC335290A622000357010 /* ServiceProvider.swift */; };
 		29C734172912A6810027D925 /* Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C734162912A6810027D925 /* Info.swift */; };
+		29C734192912B4EC0027D925 /* HeroDetailsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C734182912B4EC0027D925 /* HeroDetailsService.swift */; };
+		29E514552915593D00324892 /* ViewModelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E514542915593D00324892 /* ViewModelState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +78,8 @@
 		297EC333290984BA00357010 /* EpisodeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeViewModel.swift; sourceTree = "<group>"; };
 		297EC335290A622000357010 /* ServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProvider.swift; sourceTree = "<group>"; };
 		29C734162912A6810027D925 /* Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Info.swift; sourceTree = "<group>"; };
+		29C734182912B4EC0027D925 /* HeroDetailsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroDetailsService.swift; sourceTree = "<group>"; };
+		29E514542915593D00324892 /* ViewModelState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +170,7 @@
 			isa = PBXGroup;
 			children = (
 				297CD7032907046F00811F42 /* AppDelegate.swift */,
+				29E514532915592900324892 /* Enums */,
 				297CD73829071C7800811F42 /* Extensions */,
 				297CD72529070D9C00811F42 /* Services */,
 				297CD72D2907176C00811F42 /* Models */,
@@ -238,6 +243,7 @@
 				297EC335290A622000357010 /* ServiceProvider.swift */,
 				291836F82907D84D00296D53 /* Router */,
 				297CD72229070D1B00811F42 /* Network */,
+				29C734182912B4EC0027D925 /* HeroDetailsService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -279,6 +285,14 @@
 				297EC331290963FD00357010 /* UITableViewCell+Extensions.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		29E514532915592900324892 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				29E514542915593D00324892 /* ViewModelState.swift */,
+			);
+			path = Enums;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -375,7 +389,9 @@
 				297CD7042907046F00811F42 /* AppDelegate.swift in Sources */,
 				297EC334290984BA00357010 /* EpisodeViewModel.swift in Sources */,
 				297CD73C290720FF00811F42 /* HeroesResponse.swift in Sources */,
+				29C734192912B4EC0027D925 /* HeroDetailsService.swift in Sources */,
 				297CD72A2907152800811F42 /* ListOfHeroesViewModel.swift in Sources */,
+				29E514552915593D00324892 /* ViewModelState.swift in Sources */,
 				291837092907E26C00296D53 /* Episode.swift in Sources */,
 				297CD72F2907178300811F42 /* Hero.swift in Sources */,
 				291837032907DF0900296D53 /* HeroDetailsLocationTableViewCell.swift in Sources */,

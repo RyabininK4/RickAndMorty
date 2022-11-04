@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 final class HeroDetailViewModel {
     
@@ -14,96 +15,69 @@ final class HeroDetailViewModel {
     var hero: Hero
     var location: Location?
     var episodes: [EpisodeViewModel] = []
-    @Published var isLoading = false
-    @Published var error: NetworkError?
+    
+    @Published private(set) var state: ViewModelState = .loading
     
     // MARK: - Private properties
     
-    private let group = DispatchGroup()
-    private let queue = DispatchQueue.global(qos: .background)
-    private var networkService: NetworkServiceType
+    private var detailsService: HeroDetailsService
+    private var subscriptions = Set<AnyCancellable>()
     
     // MARK: - Init
     
     init(hero: Hero, networkService: NetworkServiceType) {
         self.hero = hero
-        self.networkService = networkService
+        self.detailsService = HeroDetailsService(networkService: networkService)
     }
     
     // MARK: - Networking
     
-    func fetchData(id: Int) {
-        self.isLoading = true
-        hero(by: id) { [weak self] in
-            guard let self = self else {
-                return
-            }
-            
-            self.queue.async {
-                self.location(by: self.hero.location)
-                
-                self.hero.episode.forEach({ self.episode(by: $0) })
-                
-                self.group.notify(queue: DispatchQueue.main) {
-                    self.isLoading = false
+    func fetchData() {
+        state = .loading
+        
+        detailsService.hero(by: hero.id)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] result in
+                guard let self = self else {
+                    return
                 }
-            }
-        }
+                switch result {
+                case .failure(let error):
+                    self.state = .error(error)
+                case .finished:
+                    self.fetchAdditionalData()
+                }
+            } receiveValue: { [weak self] value in
+                guard let self = self else {
+                    return
+                }
+                self.hero = value
+            }.store(in: &subscriptions)
     }
     
-    private func hero(by id: Int, _ completion: (() -> Void)? = nil) {
-        guard let url = API.makeUrl(with: .heroDetails(id: id)) else {
-            return
-        }
-        networkService.request(url: url) { [weak self] (result: Result<Hero, NetworkError>) in
-            guard let self = self else {
-                return
-            }
-            switch result {
-            case .failure(let error):
-                self.error = error
-            case .success(let hero):
-                self.hero = hero
-            }
-            completion?()
-        }
-    }
-    
-    private func location(by location: Location) {
-        guard let url = URL(string: location.url) else {
-            return
-        }
-        group.enter()
-        networkService.request(url: url) { [weak self] (result: Result<Location, NetworkError>) in
-            guard let self = self else {
-                return
-            }
-            switch result {
-            case .failure(let error):
-                self.error = error
-            case .success(let location):
+    private func fetchAdditionalData() {
+        hero.episode.map({ detailsService.episode(by: $0) })
+            .publisher
+            .receive(on: RunLoop.main)
+            .flatMap({ $0 })
+            .collect()
+            .combineLatest(detailsService.location(by: hero.location))
+            .sink { [weak self] result in
+                guard let self = self else {
+                    return
+                }
+                switch result {
+                case .failure(let error):
+                    self.state = .error(error)
+                case .finished:
+                    self.state = .finished
+                }
+            } receiveValue: { [weak self] (episodes, location) in
+                guard let self = self else {
+                    return
+                }
+                self.episodes = episodes.map({ EpisodeViewModel(for: $0) })
                 self.location = location
-            }
-            self.group.leave()
-        }
-    }
-    
-    private func episode(by url: String) {
-        guard let url = URL(string: url) else {
-            return
-        }
-        group.enter()
-        networkService.request(url: url) { [weak self] (result: Result<Episode, NetworkError>) in
-            guard let self = self else {
-                return
-            }
-            switch result {
-            case .failure(let error):
-                self.error = error
-            case .success(let episode):
-                self.episodes.append(EpisodeViewModel(for: episode))
-            }
-            self.group.leave()
-        }
+            }.store(in: &subscriptions)
     }
 }

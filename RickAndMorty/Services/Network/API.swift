@@ -9,20 +9,25 @@ import Foundation
 
 struct API {
     private static let url = "https://rickandmortyapi.com"
-    private static let pageHeroes = "/api/character/?page="
-    private static let heroDetails = "/api/character/"
+    private static let character = "/api/character"
     
     enum Endpoints {
-        case pageHeroes(page: Int)
+        case firstPageHeroes
+        case heroes(page: Int)
         case heroDetails(id: Int)
     }
     
     static func makeUrl(with endpoint: Endpoints) -> URL? {
         switch endpoint {
-        case .pageHeroes(let page):
-            return URL(string: url + pageHeroes + "\(page)")
+        case .firstPageHeroes:
+            return URL(string: url + character)
+        case .heroes(let page):
+            var urlComponents = URLComponents(string: url + character)
+            let queryItem = URLQueryItem(name: "page", value: "\(page)")
+            urlComponents?.queryItems = [queryItem]
+            return urlComponents?.url
         case .heroDetails(let id):
-            return URL(string: url + heroDetails + "\(id)")
+            return URL(string: url + character + "/\(id)")
         }
     }
 }

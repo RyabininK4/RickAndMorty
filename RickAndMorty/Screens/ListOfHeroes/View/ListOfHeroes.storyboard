@@ -31,13 +31,7 @@
                             <constraint firstItem="9uD-XL-RVu" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="ia3-hQ-7YV"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="jql-tP-wNV">
-                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="jaF-78-9zB">
-                            <connections>
-                                <action selector="refresh" destination="Y6W-OH-hqX" id="sle-2S-hvQ"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="jql-tP-wNV"/>
                     <connections>
                         <outlet property="tableView" destination="9uD-XL-RVu" id="c1F-aK-yZq"/>
                     </connections>

@@ -36,7 +36,7 @@ final class HeroDetailsViewController: BaseViewController {
     // MARK: - Network
     
     private func fetchData() {
-        viewModel.fetchData(id: viewModel.hero.id)
+        viewModel.fetchData()
     }
     
     // MARK: - Configure
@@ -52,20 +52,26 @@ final class HeroDetailsViewController: BaseViewController {
     // MARK: - Observer
     
     private func configureObserver() {
-        viewModel.$isLoading.receive(on: RunLoop.main).sink { [weak self] isLoading in
+        let stateHandler: (ViewModelState) -> Void = { [weak self] state in
             guard let self = self else {
                 return
             }
-            isLoading ? self.startActivity() : self.stopActivity()
-            self.tableView.reloadData()
-        }.store(in: &subscriptions)
-        
-        viewModel.$error.receive(on: RunLoop.main).sink { [weak self] error in
-            guard let self = self, let error = error else {
-                return
+            switch state {
+            case .loading:
+                self.startActivity()
+            case .finished:
+                self.stopActivity()
+                self.tableView.reloadData()
+            case .error(let error):
+                self.stopActivity()
+                self.showError(error)
             }
-            self.showError(error)
-        }.store(in: &subscriptions)
+        }
+        
+        viewModel.$state
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: stateHandler)
+            .store(in: &subscriptions)
     }
 }
 
@@ -73,7 +79,7 @@ final class HeroDetailsViewController: BaseViewController {
 
 extension HeroDetailsViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return viewModel.isLoading ? 0 : 3
+        return viewModel.state == .finished ? 3 : 0
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

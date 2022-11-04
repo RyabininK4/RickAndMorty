@@ -83,12 +83,6 @@ final class ListOfHeroesViewController: BaseViewController {
             .sink(receiveValue: stateHandler)
             .store(in: &subscriptions)
     }
-    
-    // MARK: - Actions
-    
-    @IBAction private func refresh() {
-        fetchData()
-    }
 }
 
 // MARK: - UITableViewDataSource
@@ -111,11 +105,5 @@ extension ListOfHeroesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         router.navigate(to: .heroDetails(hero: viewModel.heroes[indexPath.row]))
-    }
-
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if viewModel.heroes.count - 1 == indexPath.row {
-            viewModel.loadMoreItemsForList()
-        }
     }
 }
