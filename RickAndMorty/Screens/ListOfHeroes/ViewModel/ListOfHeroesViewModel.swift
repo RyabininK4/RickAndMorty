@@ -6,15 +6,17 @@
 //
 
 import Foundation
+import Combine
 
 final class ListOfHeroesViewModel {
     
     // MARK: - Private properties
+    
     private let maxPagesDownload = 3
     private var maxPage = 1
     private var lastDownloadPage = 1
-    private var networkService: NetworkServiceType
-    private var group = DispatchGroup()
+    private var apiService: APIService
+    private var subscriptions = Set<AnyCancellable>()
     
     // MARK: - Properties
     
@@ -26,76 +28,68 @@ final class ListOfHeroesViewModel {
     // MARK: - Init
     
     init(networkService: NetworkServiceType) {
-        self.networkService = networkService
+        self.apiService = APIService(networkService: networkService)
     }
     
     // MARK: - Download data methods
     
     func fetchData() {
-        fetchFirstPage()
+        state = .loading
+        apiService.fetchHeroesList()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] result in
+                guard let self = self else {
+                    return
+                }
+                switch result {
+                case .failure(let error):
+                    self.state = .error(error)
+                case .finished:
+                    self.state = .finished
+                    self.loadMoreItemsForList()
+                }
+            } receiveValue: { [weak self] value in
+                guard let self = self else {
+                    return
+                }
+                self.heroes = value.results
+                self.maxPage = value.info.pages
+            }.store(in: &subscriptions)
     }
     
     private func loadMoreItemsForList() {
-        group = DispatchGroup()
+        var publishers: [AnyPublisher<HeroesResponse, NetworkError>] = []
         
         for _ in 0..<maxPagesDownload {
             lastDownloadPage += 1
             if lastDownloadPage < maxPage {
-                fetch(by: lastDownloadPage)
+                publishers.append(apiService.heroes(by: lastDownloadPage))
             } else {
                 break
             }
         }
         
-        group.notify(queue: DispatchQueue.main) { [weak self] in
-            guard let self = self else {
-                return
-            }
-            if self.lastDownloadPage < self.maxPage {
-                self.loadMoreItemsForList()
-            }
-        }
-    }
-    
-    // MARK: - Network
-    
-    private func fetchFirstPage() {
-        guard let url = API.makeUrl(with: .firstPageHeroes) else {
-            return
-        }
-        state = .loading
-        networkService.request(url: url) { [weak self] (result: Result<HeroesResponse, NetworkError>) in
-            guard let self = self else {
-                return
-            }
-            switch result {
-            case .failure(let error):
-                self.state = .error(error)
-            case .success(let data):
-                self.heroes = data.results
-                self.maxPage = data.info.pages
-                self.state = .finished
-                self.loadMoreItemsForList()
-            }
-        }
-    }
-    
-    private func fetch(by page: Int) {
-        guard let url = API.makeUrl(with: .heroes(page: page)) else {
-            return
-        }
-        group.enter()
-        networkService.request(url: url) { [weak self] (result: Result<HeroesResponse, NetworkError>) in
-            guard let self = self else {
-                return
-            }
-            switch result {
-            case .failure(_):
-                break
-            case .success(let data):
-                self.heroes.append(contentsOf: data.results)
-            }
-            self.group.leave()
-        }
+        publishers.publisher
+            .receive(on: RunLoop.main)
+            .flatMap({ $0 })
+            .collect()
+            .sink { [weak self] result in
+                guard let self = self else {
+                    return
+                }
+                switch result {
+                case .failure(let error):
+                    print(error)
+                case .finished:
+                    if self.lastDownloadPage < self.maxPage {
+                        self.loadMoreItemsForList()
+                    }
+                }
+            } receiveValue: { [weak self] value in
+                guard let self = self else {
+                    return
+                }
+                self.heroes.append(contentsOf: value.map({ $0.results }).reduce([], +))
+            }.store(in: &subscriptions)
     }
 }

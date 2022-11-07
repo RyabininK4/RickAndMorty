@@ -39,7 +39,7 @@
 		297EC334290984BA00357010 /* EpisodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297EC333290984BA00357010 /* EpisodeViewModel.swift */; };
 		297EC336290A622000357010 /* ServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297EC335290A622000357010 /* ServiceProvider.swift */; };
 		29C734172912A6810027D925 /* Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C734162912A6810027D925 /* Info.swift */; };
-		29C734192912B4EC0027D925 /* HeroDetailsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C734182912B4EC0027D925 /* HeroDetailsService.swift */; };
+		29C734192912B4EC0027D925 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C734182912B4EC0027D925 /* APIService.swift */; };
 		29E514552915593D00324892 /* ViewModelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E514542915593D00324892 /* ViewModelState.swift */; };
 /* End PBXBuildFile section */
 
@@ -78,7 +78,7 @@
 		297EC333290984BA00357010 /* EpisodeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeViewModel.swift; sourceTree = "<group>"; };
 		297EC335290A622000357010 /* ServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProvider.swift; sourceTree = "<group>"; };
 		29C734162912A6810027D925 /* Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Info.swift; sourceTree = "<group>"; };
-		29C734182912B4EC0027D925 /* HeroDetailsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroDetailsService.swift; sourceTree = "<group>"; };
+		29C734182912B4EC0027D925 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		29E514542915593D00324892 /* ViewModelState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -230,8 +230,9 @@
 		297CD72229070D1B00811F42 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				297CD7262907147400811F42 /* NetworkError.swift */,
+				29C734182912B4EC0027D925 /* APIService.swift */,
 				297CD72329070D3800811F42 /* NetworkService.swift */,
+				297CD7262907147400811F42 /* NetworkError.swift */,
 				297CD731290719BA00811F42 /* API.swift */,
 			);
 			path = Network;
@@ -243,7 +244,6 @@
 				297EC335290A622000357010 /* ServiceProvider.swift */,
 				291836F82907D84D00296D53 /* Router */,
 				297CD72229070D1B00811F42 /* Network */,
-				29C734182912B4EC0027D925 /* HeroDetailsService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -389,7 +389,7 @@
 				297CD7042907046F00811F42 /* AppDelegate.swift in Sources */,
 				297EC334290984BA00357010 /* EpisodeViewModel.swift in Sources */,
 				297CD73C290720FF00811F42 /* HeroesResponse.swift in Sources */,
-				29C734192912B4EC0027D925 /* HeroDetailsService.swift in Sources */,
+				29C734192912B4EC0027D925 /* APIService.swift in Sources */,
 				297CD72A2907152800811F42 /* ListOfHeroesViewModel.swift in Sources */,
 				29E514552915593D00324892 /* ViewModelState.swift in Sources */,
 				291837092907E26C00296D53 /* Episode.swift in Sources */,
